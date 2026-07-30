@@ -1,0 +1,1779 @@
+const CONFIG_ITEMS = [
+  {
+    name: "Pistol Flashlight",
+    category: "attachments",
+    levelRequired: 10,
+    blueprintRequired: false,
+    xp: 5,
+    stopLevel: 1250,
+    materials: {
+      glass: 40,
+      plastic: 75,
+      electronics: 75,
+      scrap: 40
+    }
+  },
+  {
+    name: "SMG Flashlight",
+    category: "attachments",
+    levelRequired: 20,
+    blueprintRequired: false,
+    xp: 10,
+    stopLevel: 2200,
+    materials: {
+      glass: 40,
+      plastic: 115,
+      electronics: 115,
+      scrap: 55
+    }
+  },
+  {
+    name: "Rifle Flashlight",
+    category: "attachments",
+    levelRequired: 30,
+    blueprintRequired: false,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      glass: 40,
+      plastic: 150,
+      electronics: 150,
+      scrap: 75
+    }
+  },
+  {
+    name: "Small Scope",
+    category: "attachments",
+    levelRequired: 15,
+    blueprintRequired: false,
+    xp: 5,
+    stopLevel: 2000,
+    yields: 2,
+    materials: {
+      scrap: 10,
+      plastic: 115,
+      electronics: 75,
+      glass: 40
+    }
+  },
+  {
+    name: "Medium Scope",
+    category: "attachments",
+    levelRequired: 20,
+    blueprintRequired: false,
+    xp: 10,
+    stopLevel: 2500,
+    yields: 2,
+    materials: {
+      scrap: 15,
+      plastic: 150,
+      electronics: 115,
+      glass: 40
+    }
+  },
+  {
+    name: "Large Scope",
+    category: "attachments",
+    levelRequired: 30,
+    blueprintRequired: false,
+    xp: 15,
+    stopLevel: 6000,
+    yields: 2,
+    materials: {
+      scrap: 25,
+      plastic: 190,
+      electronics: 150,
+      glass: 40
+    }
+  },
+  {
+    name: "Shotgun Suppressor",
+    category: "attachments",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 20,
+    stopLevel: 30,
+    materials: {
+      steel: 180,
+      scrap: 305,
+      rubber: 85,
+      plastic: 55,
+      titanium: 40
+    }
+  },
+  {
+    name: "SMG Suppressor",
+    category: "attachments",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 20,
+    stopLevel: 30,
+    materials: {
+      steel: 180,
+      scrap: 305,
+      rubber: 85,
+      plastic: 55,
+      titanium: 40
+    }
+  },
+  {
+    name: "Pistol Suppressor",
+    category: "attachments",
+    levelRequired: 29,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 3500,
+    materials: {
+      scrap: 150,
+      rubber: 55,
+      steel: 150,
+      titanium: 15
+    }
+  },
+  {
+    name: "Rifle Suppressor",
+    category: "attachments",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 20,
+    stopLevel: 30,
+    materials: {
+      steel: 270,
+      scrap: 305,
+      rubber: 115,
+      plastic: 75,
+      titanium: 40
+    }
+  },
+  {
+    name: "Ext Sub Mag",
+    category: "attachments",
+    levelRequired: 22,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 2500,
+    materials: {
+      plastic: 75,
+      titanium: 5,
+      scrap: 115,
+      aluminium: 115
+    }
+  },
+  {
+    name: "Ext Pistol Mag",
+    category: "attachments",
+    levelRequired: 22,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 2800,
+    materials: {
+      plastic: 40,
+      titanium: 10,
+      scrap: 75,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Extended Pistol Clip",
+    category: "attachments",
+    levelRequired: 22,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 2800,
+    materials: {
+      scrap: 75,
+      titanium: 10,
+      plastic: 40,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Ext Shotgun Mag",
+    category: "attachments",
+    levelRequired: 32,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 6000,
+    materials: {
+      plastic: 115,
+      titanium: 10,
+      scrap: 150,
+      aluminium: 150
+    }
+  },
+  {
+    name: "Extended Rifle Mag",
+    category: "attachments",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      scrap: 150,
+      titanium: 15,
+      plastic: 115,
+      aluminium: 150
+    }
+  },
+  {
+    name: "Extended Shotgun Mag",
+    category: "attachments",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      scrap: 150,
+      titanium: 10,
+      plastic: 115,
+      aluminium: 150
+    }
+  },
+  {
+    name: "Pistol Drum Mag",
+    category: "attachments",
+    levelRequired: 20,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 6000,
+    materials: {
+      plastic: 75,
+      titanium: 5,
+      scrap: 115,
+      aluminium: 115
+    }
+  },
+  {
+    name: "Sub Drum Mag",
+    category: "attachments",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      plastic: 115,
+      titanium: 10,
+      scrap: 150,
+      aluminium: 150
+    }
+  },
+  {
+    name: "SMG Drum Mag",
+    category: "attachments",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      scrap: 150,
+      titanium: 10,
+      plastic: 115,
+      aluminium: 150
+    }
+  },
+  {
+    name: "Rifle Drum Mag",
+    category: "attachments",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 20,
+    stopLevel: 6000,
+    materials: {
+      scrap: 225,
+      titanium: 15,
+      plastic: 225,
+      aluminium: 225
+    }
+  },
+  {
+    name: "Vintage Pistol",
+    category: "weapons",
+    levelRequired: 20,
+    blueprintRequired: false,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      pistolSlide: 1,
+      titanium: 40,
+      gunTrigger: 1,
+      pistolClip: 1,
+      pistolGrip: 1
+    }
+  },
+  {
+    name: "Beretta M9A",
+    category: "weapons",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 4500,
+    materials: {
+      gunTrigger: 1,
+      pistolClip: 1,
+      pistolSlide: 1,
+      pistolGrip: 1,
+      titanium: 55
+    }
+  },
+  {
+    name: "Desert Eagle",
+    category: "weapons",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 60,
+    materials: {
+      pistolSlide: 1,
+      gunTrigger: 1,
+      pistolClip: 1,
+      pistolGrip: 1,
+      titanium: 60
+    }
+  },
+  {
+    name: "Tec 9",
+    category: "weapons",
+    levelRequired: 25,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 95,
+    materials: {
+      metalSpring: 1,
+      pistolSlide: 1,
+      steelPlate: 2,
+      pistolClip: 1,
+      plastic: 370,
+      aluminium: 30,
+      scrap: 15,
+      titanium: 150,
+      gunTrigger: 1,
+      pistolGrip: 1
+    }
+  },
+  {
+    name: "Heavy Revolver",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 67.5,
+    materials: {
+      pistolSlide: 1,
+      gunTrigger: 1,
+      pistolClip: 1,
+      pistolGrip: 1,
+      titanium: 60
+    }
+  },
+  {
+    name: "Glock 45",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      pistolClip: 1,
+      gunTrigger: 1,
+      pistolSlide: 1,
+      pistolGrip: 1,
+      scrap: 150,
+      plastic: 520,
+      aluminium: 220,
+      titanium: 75
+    }
+  },
+  {
+    name: "AP Pistol",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 0,
+    stopLevel: 0,
+    materials: {
+      pistolSlide: 1,
+      gunTrigger: 1,
+      pistolClip: 1,
+      pistolGrip: 1,
+      titanium: 225,
+      plastic: 250,
+      steel: 250
+    }
+  },
+  {
+    name: "MPX",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 20,
+    stopLevel: 85,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgExtractor: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      titanium: 115
+    }
+  },
+  {
+    name: "Mac-10",
+    category: "weapons",
+    levelRequired: 53,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 92,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      steelPlate: 4
+    }
+  },
+  {
+    name: "UMP",
+    category: "weapons",
+    levelRequired: 45,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 92,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgExtractor: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      steelPlate: 4,
+      titanium: 190
+    }
+  },
+  {
+    name: "Magpull",
+    category: "weapons",
+    levelRequired: 0,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      smgExtractor: 1,
+      steelPlate: 4,
+      scrap: 55,
+      plastic: 370,
+      aluminium: 100,
+      titanium: 190
+    }
+  },
+  {
+    name: "MCX",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      steelPlate: 4,
+      smgMag: 1,
+      titanium: 100
+    }
+  },
+  {
+    name: "Skorpion",
+    category: "weapons",
+    levelRequired: 45,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      smgExtractor: 1,
+      plastic: 620,
+      scrap: 55,
+      aluminium: 100,
+      titanium: 100
+    }
+  },
+  {
+    name: "Super Shorty",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 82.5,
+    materials: {
+      metalSpring: 1,
+      boltAssembly: 1,
+      gunTrigger: 1,
+      shotgunForeend: 1,
+      shotgunBarrel: 1,
+      shotgunStock: 1,
+      shotgunTrigger: 1,
+      titanium: 120
+    }
+  },
+  {
+    name: "Vepr",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 85,
+    materials: {
+      metalSpring: 1,
+      boltAssembly: 1,
+      gunTrigger: 1,
+      shotgunForeend: 1,
+      shotgunBarrel: 1,
+      shotgunStock: 1,
+      shotgunTrigger: 1,
+      titanium: 205
+    }
+  },
+  {
+    name: "Molotov",
+    category: "weapons",
+    levelRequired: 0,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 6000,
+    materials: {
+      glass: 300,
+      blackRussian: 5,
+      moscowMule: 5,
+      dirtyShirley: 5,
+      screwdriver: 5
+    }
+  },
+  {
+    name: "Switchblade",
+    category: "tools",
+    levelRequired: 0,
+    blueprintRequired: true,
+    xp: 5,
+    stopLevel: 6000,
+    materials: {
+      plastic: 55,
+      titanium: 5,
+      scrap: 75,
+      aluminium: 30
+    }
+  },
+  {
+    name: "Scales",
+    category: "tools",
+    levelRequired: 0,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 500,
+    materials: {
+      glass: 15,
+      scrap: 15,
+      controlChip: 1,
+      powerSupply: 1,
+      plastic: 40,
+      electronics: 10,
+      circuitBoard: 1
+    }
+  },
+  {
+    name: "Advanced Lockpick",
+    category: "tools",
+    levelRequired: 0,
+    blueprintRequired: true,
+    xp: 3,
+    stopLevel: 1000,
+    materials: {
+      plastic: 30,
+      scrap: 30,
+      aluminium: 30
+    }
+  },
+  {
+    name: "Screw driver Set",
+    category: "tools",
+    levelRequired: 1,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 800,
+    materials: {
+      plastic: 10,
+      scrap: 10,
+      aluminium: 10
+    }
+  },
+  {
+    name: "Fake Number Plate",
+    category: "tools",
+    levelRequired: 2,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      scrap: 225,
+      plastic: 150,
+      steel: 75,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Heavy Cutters",
+    category: "tools",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 2500,
+    materials: {
+      titanium: 5,
+      scrap: 40,
+      plastic: 15,
+      steel: 15,
+      rubber: 15
+    }
+  },
+  {
+    name: "Ziptie",
+    category: "tools",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 2,
+    stopLevel: 1000,
+    materials: {
+      wire: 25,
+      plastic: 55,
+      steel: 35,
+      aluminium: 25
+    }
+  },
+  {
+    name: "Machete",
+    category: "tools",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 5,
+    stopLevel: 6000,
+    materials: {
+      plastic: 55,
+      titanium: 5,
+      scrap: 75,
+      aluminium: 30
+    }
+  },
+  {
+    name: "Battle Axe",
+    category: "tools",
+    levelRequired: 7,
+    blueprintRequired: false,
+    xp: 5,
+    stopLevel: 6000,
+    materials: {
+      plastic: 55,
+      titanium: 5,
+      scrap: 75,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Golf Club",
+    category: "tools",
+    levelRequired: 10,
+    blueprintRequired: false,
+    xp: 8,
+    stopLevel: 6000,
+    materials: {
+      plastic: 60,
+      titanium: 10,
+      scrap: 90,
+      aluminium: 60
+    }
+  },
+  {
+    name: "Bottle",
+    category: "tools",
+    levelRequired: 15,
+    blueprintRequired: false,
+    xp: 10,
+    stopLevel: 6000,
+    materials: {
+      plastic: 70,
+      titanium: 15,
+      scrap: 105,
+      aluminium: 70
+    }
+  },
+  {
+    name: "Pool Cue",
+    category: "tools",
+    levelRequired: 17,
+    blueprintRequired: false,
+    xp: 10,
+    stopLevel: 6000,
+    materials: {
+      plastic: 70,
+      titanium: 15,
+      scrap: 105,
+      aluminium: 70
+    }
+  },
+  {
+    name: "Pan",
+    category: "tools",
+    levelRequired: 23,
+    blueprintRequired: false,
+    xp: 12,
+    stopLevel: 7000,
+    materials: {
+      plastic: 70,
+      titanium: 25,
+      scrap: 130,
+      aluminium: 70
+    }
+  },
+  {
+    name: "Safe Cracker",
+    category: "tools",
+    levelRequired: 12,
+    blueprintRequired: false,
+    xp: 2,
+    stopLevel: 2500,
+    materials: {
+      titanium: 5,
+      scrap: 25,
+      plastic: 10,
+      steel: 55,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Heavy Duty Drill",
+    category: "tools",
+    levelRequired: 15,
+    blueprintRequired: false,
+    xp: 100,
+    stopLevel: 3500,
+    materials: {
+      titanium: 15,
+      scrap: 380,
+      powerSupply: 5,
+      plastic: 750,
+      steel: 530,
+      controlChip: 5,
+      circuitBoard: 5,
+      electronics: 450,
+      rubber: 450
+    }
+  },
+  {
+    name: "HyperCore Drill",
+    category: "tools",
+    levelRequired: 30,
+    blueprintRequired: true,
+    xp: 100,
+    stopLevel: 6000,
+    materials: {
+      scrap: 400,
+      drillHousing: 1,
+      drillBattery: 1,
+      drillBit: 1
+    }
+  },
+  {
+    name: "Racing Tablet",
+    category: "tools",
+    levelRequired: 15,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      glass: 375,
+      brokenTablet: 1,
+      powerSupply: 2,
+      plastic: 15,
+      rubber: 40,
+      controlChip: 2,
+      circuitBoard: 2,
+      electronics: 150,
+      wire: 375
+    }
+  },
+  {
+    name: "Exotic Lockpick",
+    category: "tools",
+    levelRequired: 20,
+    blueprintRequired: true,
+    xp: 10,
+    stopLevel: 5000,
+    materials: {
+      titanium: 25,
+      aluminium: 75,
+      scrap: 75,
+      plastic: 75
+    }
+  },
+  {
+    name: "Hacking Device",
+    category: "tools",
+    levelRequired: 20,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 3000,
+    materials: {
+      electronics: 380,
+      circuitBoard: 2,
+      scrap: 525,
+      controlChip: 2,
+      powerSupply: 2,
+      wire: 115,
+      steel: 190,
+      rubber: 380
+    }
+  },
+  {
+    name: "ECU Hacking Device",
+    category: "tools",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      wire: 230,
+      powerSupply: 1,
+      controlChip: 1,
+      circuitBoard: 1,
+      electronics: 230,
+      techShavings: 25
+    }
+  },
+  {
+    name: "Advanced Radio",
+    category: "tools",
+    levelRequired: 23,
+    blueprintRequired: false,
+    xp: 25,
+    stopLevel: 3000,
+    materials: {
+      unknownUsbDevice: 1,
+      controlChip: 1,
+      powerSupply: 1,
+      hackingDevice: 1,
+      radio: 1,
+      circuitBoard: 1
+    }
+  },
+  {
+    name: "Unknown USB Device",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      circuitBoard: 1,
+      brokenUsb: 1,
+      rubber: 10,
+      plastic: 75,
+      electronics: 150,
+      wire: 25
+    }
+  },
+  {
+    name: "Drill Housing",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 3,
+    stopLevel: 3500,
+    materials: {
+      titanium: 115,
+      scrap: 380,
+      powerSupply: 3,
+      plastic: 380,
+      steel: 380,
+      controlChip: 3,
+      circuitBoard: 3,
+      electronics: 380,
+      rubber: 380
+    }
+  },
+  {
+    name: "Drill Bit Mold",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 3,
+    stopLevel: 3500,
+    materials: {
+      rubber: 380,
+      plastic: 75
+    }
+  },
+  {
+    name: "VPN",
+    category: "tools",
+    levelRequired: 32,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      circuitBoard: 5,
+      scrap: 375,
+      powerSupply: 5,
+      wire: 40,
+      rubber: 150,
+      controlChip: 5,
+      steel: 115,
+      electronics: 375,
+      brokenVpn: 1
+    }
+  },
+  {
+    name: "Blank Card",
+    category: "tools",
+    levelRequired: 37,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    yields: 10,
+    materials: {
+      electronics: 30,
+      plastic: 150
+    }
+  },
+  {
+    name: "Skimmer",
+    category: "tools",
+    levelRequired: 37,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      steel: 75,
+      rubber: 100,
+      controlChip: 1,
+      powerSupply: 1,
+      scrap: 250,
+      wire: 25,
+      electronics: 250,
+      circuitBoard: 1
+    }
+  },
+  {
+    name: "Info Laptop",
+    category: "tools",
+    levelRequired: 40,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      glass: 750,
+      powerSupply: 5,
+      plastic: 375,
+      rubber: 750,
+      controlChip: 5,
+      circuitBoard: 5,
+      wire: 750,
+      electronics: 1125,
+      brokenLaptop: 1
+    }
+  },
+  {
+    name: "Encrypted Laptop",
+    category: "tools",
+    levelRequired: 40,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      glass: 750,
+      powerSupply: 5,
+      plastic: 375,
+      rubber: 750,
+      controlChip: 5,
+      circuitBoard: 5,
+      wire: 750,
+      electronics: 1125,
+      brokenLaptop: 1
+    }
+  },
+  {
+    name: "Tool Belt",
+    category: "tools",
+    levelRequired: 18,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      sewingThread: 75,
+      leatherHide: 40
+    }
+  },
+  {
+    name: "Lockpick",
+    category: "tools",
+    levelRequired: 0,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 500,
+    materials: {
+      plastic: 5,
+      scrap: 10,
+      rubber: 15
+    }
+  },
+  {
+    name: "Manhole Remover",
+    category: "tools",
+    levelRequired: 10,
+    blueprintRequired: false,
+    xp: 2,
+    stopLevel: 2500,
+    materials: {
+      scrap: 25,
+      titanium: 15,
+      steel: 55,
+      aluminium: 75
+    }
+  },
+  {
+    name: "Drill Battery",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 3,
+    stopLevel: 3500,
+    materials: {
+      superCellBattery: 150
+    }
+  },
+  {
+    name: "Drug Crate",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 3,
+    stopLevel: 3500,
+    materials: {
+      rubber: 25,
+      plastic: 40,
+      steel: 50,
+      aluminium: 30
+    }
+  },
+  {
+    name: "Bag of Clothes",
+    category: "tools",
+    levelRequired: 25,
+    blueprintRequired: false,
+    xp: 5,
+    stopLevel: 6000,
+    materials: {
+      blaineCountyCoyotes: 1,
+      downtownBullsharks: 1,
+      paletoBayPirates: 1,
+      losSantosBandits: 1,
+      mazeBankMaulers: 1,
+      mountChiliadAvalanche: 1,
+      vinewoodStars: 1,
+      vespucciBeachSharks: 1
+    }
+  },
+  {
+    name: "Pistol Ammo",
+    category: "materials",
+    levelRequired: 5,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      scrap: 10,
+      gunpowder: 10
+    }
+  },
+  {
+    name: "Rifle Ammo",
+    category: "materials",
+    levelRequired: 29,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 3500,
+    materials: {
+      scrap: 25,
+      gunpowder: 25
+    }
+  },
+  {
+    name: "SMG Ammo",
+    category: "materials",
+    levelRequired: 19,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 2500,
+    materials: {
+      scrap: 15,
+      gunpowder: 15
+    }
+  },
+  {
+    name: "Digital Scanner",
+    category: "tools",
+    levelRequired: 35,
+    blueprintRequired: false,
+    xp: 15,
+    stopLevel: 5500,
+    materials: {
+      circuitBoard: 3,
+      wire: 265,
+      controlChip: 3,
+      powerSupply: 3,
+      plastic: 230,
+      techShavings: 25
+    }
+  },
+  {
+    name: "Gunpowder",
+    category: "materials",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      sulfurPowder: 25,
+      charcoal: 15
+    }
+  },
+  {
+    name: "Copper",
+    category: "materials",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      copperOre: 10
+    }
+  },
+  {
+    name: "Gold",
+    category: "materials",
+    levelRequired: 5,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      goldNugget: 10
+    }
+  },
+  {
+    name: "Aluminum Oxide",
+    category: "materials",
+    levelRequired: 35,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      gunpowder: 25,
+      aluminium: 25
+    }
+  },
+  {
+    name: "Iron Oxide",
+    category: "materials",
+    levelRequired: 35,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 1200,
+    materials: {
+      gunpowder: 25,
+      steel: 25
+    }
+  },
+  {
+    name: "Thermite",
+    category: "tools",
+    levelRequired: 40,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 60,
+    materials: {
+      thermitePowder: 10
+    }
+  },
+  {
+    name: "Karambit",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 25,
+    stopLevel: 100,
+    materials: {
+      aluminium: 150,
+      scrap: 380,
+      steel: 150,
+      titanium: 75
+    }
+  },
+  {
+    name: "AK47",
+    category: "weapons",
+    levelRequired: 45,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 10000,
+    materials: {
+      akMag: 1,
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 350,
+      akBolt: 1,
+      akBarrelPin: 1,
+      akStock: 1,
+      akReceiverCover: 1,
+      akBarrel: 1,
+      akPistonPin: 1
+    }
+  },
+  {
+    name: "Tommy Gun",
+    category: "weapons",
+    levelRequired: 35,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 8750,
+    materials: {
+      boltAssembly: 1,
+      titanium: 135,
+      smgMag: 1,
+      gunTrigger: 1,
+      smgBarrel: 1,
+      metalSpring: 1,
+      planks: 5,
+      smgExtractor: 1
+    }
+  },
+  {
+    name: "Metal Spring",
+    category: "materials",
+    levelRequired: 6,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 120,
+      scrap: 15,
+      aluminium: 30
+    }
+  },
+  {
+    name: "Bolt Assembly",
+    category: "materials",
+    levelRequired: 8,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 60,
+    materials: {
+      plastic: 120,
+      aluminium: 30,
+      scrap: 15
+    }
+  },
+  {
+    name: "Gun Trigger",
+    category: "materials",
+    levelRequired: 12,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 130,
+      scrap: 25,
+      aluminium: 40
+    }
+  },
+  {
+    name: "Pistol Slide",
+    category: "materials",
+    levelRequired: 14,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 130,
+      scrap: 40,
+      aluminium: 70
+    }
+  },
+  {
+    name: "Pistol Grip",
+    category: "materials",
+    levelRequired: 16,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 130,
+      scrap: 55,
+      aluminium: 55
+    }
+  },
+  {
+    name: "Pistol Clip",
+    category: "materials",
+    levelRequired: 18,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 130,
+      scrap: 30,
+      aluminium: 55
+    }
+  },
+  {
+    name: "Meth Lab Kit",
+    category: "tools",
+    levelRequired: 20,
+    blueprintRequired: true,
+    xp: 15,
+    stopLevel: 6000,
+    materials: {
+      aluminium: 750,
+      scrap: 750,
+      plastic: 750,
+      titanium: 150
+    }
+  },
+  {
+    name: "Respray Can",
+    category: "tools",
+    levelRequired: 40,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      plastic: 50,
+      aluminium: 50,
+      scrap: 50,
+      rubber: 50
+    }
+  },
+  {
+    name: "Spike",
+    category: "tools",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      aluminium: 500,
+      rubber: 500,
+      steel: 500,
+      plastic: 500
+    }
+  },
+  {
+    name: "Gold Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 3,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Orange Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 2,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Pink Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 2,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Seisanta Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 3,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Persona Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 3,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Boom Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 3,
+      zincOre: 6
+    }
+  },
+  {
+    name: "USA Weapon Skin",
+    category: "skins",
+    levelRequired: 60,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      copperOre: 6,
+      tinOre: 3,
+      zincOre: 6
+    }
+  },
+  {
+    name: "Combat PDW",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgBarrel: 1,
+      smgMag: 1,
+      titanium: 190,
+      smgExtractor: 1,
+      steelPlate: 6,
+    }
+  },
+  {
+    name: "Double Barrel Shotgun",
+    category: "weapons",
+    levelRequired: 50,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      steelPlate: 4,
+      metalSpring: 1,
+      titanium: 120,
+      gunTrigger: 1,
+      boltAssembly: 1
+    }
+  },
+  {
+    name: "Midnight Rifle",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 360
+    }
+  },
+  {
+    name: "Black Ice Rifle",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 360
+    }
+  },
+  {
+    name: "Demon Rifle",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 360
+    }
+  },
+  {
+    name: "Toxic Rifle",
+    category: "weapons",
+    levelRequired: 55,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 360
+    }
+  },
+  {
+    name: "Steel Plate",
+    category: "materials",
+    levelRequired: 20,
+    blueprintRequired: false,
+    xp: 1,
+    stopLevel: 6000,
+    materials: {
+      steelBar: 10
+    }
+  },
+  {
+    name: "AS-VAL",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      steelPlate: 6,
+      titanium: 375
+    }
+  },
+  {
+    name: "Gepard",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      titanium: 225
+    }
+  },
+  {
+    name: "Uzi",
+    category: "weapons",
+    levelRequired: 50,
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 6000,
+    materials: {
+      boltAssembly: 1,
+      metalSpring: 1,
+      gunTrigger: 1,
+      smgMag: 1,
+      smgExtractor: 1,
+      titanium: 100
+    }
+  },
+  {
+    name: "AKS-74U",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      steelPlate: 6,
+      metalSpring: 1,
+      titanium: 225,
+      gunTrigger: 1
+    }
+  },
+ {
+    name: "AK-74",
+    category: "weapons",
+    levelRequired: 60, 
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 14500,
+    materials: {
+      akBarrelPin: 1,
+      akPistonPin: 1,
+      titanium: 295,
+      steelPlate: 6,
+      akReceiverCover: 1,
+      akBarrel: 1,
+      akBolt: 1,
+      akMag: 1,
+      akStock: 1
+    }
+  },
+  {
+    name: "Groza",
+    category: "weapons",
+    levelRequired: 60,
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 6000,
+    materials: {
+      rifleStockTube: 1,
+      boltAssembly: 1,
+      rifleReceiver: 1,
+      rifleStock: 1,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      titanium: 225,
+      gunTrigger: 1,
+      steelPlate: 6
+    }
+  },
+  {
+    name: "Advanced Rifle",
+    category: "weapons",
+    levelRequired: 60, 
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 12000,
+    materials: {
+      gunTrigger: 1,
+      rifleReceiver: 1,
+      boltAssembly: 1,
+      steelPlate: 6,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      rifleStock: 1,
+      rifleGrip: 1,
+      titanium: 300,
+      rifleStockTube: 1
+    }
+  },
+    {
+    name: "M4 Carbine Rifle",
+    category: "weapons",
+    levelRequired: 60, 
+    blueprintRequired: true,
+    xp: 50,
+    stopLevel: 12000,
+    materials: {
+      gunTrigger: 1,
+      rifleReceiver: 1,
+      boltAssembly: 1,
+      steelPlate: 6,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      rifleStock: 1,
+      rifleGrip: 1,
+      titanium: 375,
+      rifleStockTube: 1
+    }
+  },
+      {
+    name: "Draggunov",
+    category: "weapons",
+    levelRequired: 60, 
+    blueprintRequired: true,
+    xp: 25,
+    stopLevel: 12000,
+    materials: {
+      gunTrigger: 1,
+      rifleReceiver: 1,
+      boltAssembly: 1,
+      steelPlate: 6,
+      rifleBarrel: 1,
+      metalSpring: 1,
+      rifleStock: 1,
+      rifleGrip: 1,
+      titanium: 525,
+      rifleStockTube: 1
+    }
+  },
+  {
+    name: "Rifle Grip Attachment",
+    category: "Attachments",
+    levelRequired: 15,
+    blueprintRequired: true,
+    xp: 5,
+    stopLevel: 2000,
+    materials: {
+      plastic: 115,
+      scrap: 10,
+      electronics: 75,
+      glass: 40
+    }
+  }
+];

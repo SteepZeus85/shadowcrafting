@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHADOW · Crafting Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="style_config.js"></script>
+<script>
+/* apply brand colors before first paint so there's no flash of default colors */
+(function(){
+  var cfg=(typeof STYLE_CONFIG!=='undefined')?STYLE_CONFIG:{};
+  var c=cfg.colors||{};
+  var r=document.documentElement.style;
+  if(c.accent)r.setProperty('--crimson',c.accent);
+  if(c.accentBright)r.setProperty('--crimson-br',c.accentBright);
+  if(c.accentDim)r.setProperty('--crimson-dim',c.accentDim);
+  if(c.highlight)r.setProperty('--rose',c.highlight);
+  if(c.glow)r.setProperty('--glow',c.glow);
+  if(c.emblemGlow)r.setProperty('--emblem-glow',c.emblemGlow);
+  if(cfg.gangName)document.title=cfg.gangName+(cfg.pageTitleSuffix?" · "+cfg.pageTitleSuffix:"");
+})();
+</script>
+<style>
+:root{
+  --black:#0b0b0e; --bg:#101015; --bg2:#16161c; --bg3:#1e1e26; --raise:#282833;
+  --line:#2a2a34; --line2:#393944; --line3:#4c4c59;
+  --bone:#f4f2f6; --ink:#e4e2ea; --ash:#b6b3bf; --faint:#8b8794;
+  --crimson:#480087; --crimson-br:#a03cd6; --crimson-dim:#58147c; --rose:#d76aff;
+  --glow:rgba(31, 177, 210,.15);
+  --emblem-glow:rgba(132, 31, 210,.4);
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --body:'Barlow',system-ui,sans-serif;
+  --goth:'Grenze Gotisch',serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1000px 520px at 50% -10%, #1a0d0f 0%, transparent 62%),var(--black);
+  color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding:0 22px}
+::selection{background:var(--glow)}
+button,input{font-family:var(--body)}
+
+header{display:flex;align-items:center;gap:20px;padding:30px 0 22px;border-bottom:1px solid var(--line2)}
+.emblem{width:74px;height:74px;border-radius:50%;flex:none;box-shadow:0 0 0 1px var(--line3),0 8px 26px -8px var(--emblem-glow)}
+.titleblock{display:flex;flex-direction:column;gap:3px}
+.wordmark{font-family:var(--body);font-weight:900;font-size:clamp(38px,7vw,58px);line-height:.86;letter-spacing:.02em;
+  color:var(--bone);text-shadow:0 1px 0 #000}
+.wordmark .x{color:var(--crimson-br)}
+.tagline{font-family:var(--mono);font-size:11.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--ash);padding-left:3px}
+.tagline .dot{color:var(--crimson-br)}
+
+.card{background:var(--bg2);border:1px solid var(--line2);border-radius:5px}
+.sechead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:38px 0 14px}
+.sechead h2{font-family:var(--body);font-weight:700;font-size:24px;letter-spacing:.02em;margin:0;color:var(--bone)}
+.sechead .desc{color:var(--ash);font-size:13px}
+.sechead .spacer{flex:1}
+.crumb{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--crimson-br);font-weight:700}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px 34px;align-items:end;margin:22px 0 0;padding:18px 22px}
+.planner-controls{display:flex;flex-wrap:wrap;align-items:end;gap:14px 22px;padding:18px 22px;border-bottom:1px solid var(--line2)}
+.plan-in{width:70px;font-family:var(--mono);font-weight:700;font-size:22px;color:var(--rose);background:var(--black);border:1px solid var(--line3);border-radius:5px;padding:5px 8px;text-align:center}
+.plan-in:focus{outline:none;border-color:var(--crimson-br);box-shadow:0 0 0 3px var(--glow)}
+.plan-arrow{font-family:var(--mono);color:var(--faint);font-size:20px;padding-bottom:6px}
+.plan-note{font-size:11.5px;color:var(--faint);max-width:30ch;line-height:1.4;padding-bottom:4px}
+.plan-body{padding:0}
+.stages{padding:6px 0}
+.stage{display:flex;align-items:baseline;gap:12px;padding:8px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px}
+.stage:last-child{border-bottom:0}
+.stage .sl{color:var(--rose);font-weight:700;width:80px;flex:none}
+.stage .sn{color:var(--bone);flex:1}
+.stage .sc{color:var(--ash)}
+.stage.gap .sn{color:var(--faint)}
+.plan-warn{padding:12px 18px;color:var(--rose);font-size:12.5px;font-family:var(--mono);border-bottom:1px solid var(--line2)}
+.ctrl label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;font-weight:700}
+.lvl-box{display:flex;align-items:center;gap:12px}
+.lvl-box input{width:90px;font-family:var(--mono);font-weight:700;font-size:30px;color:var(--rose);
+  background:var(--black);border:1px solid var(--line3);border-radius:5px;padding:5px 10px;text-align:center}
+.lvl-box input:focus{outline:none;border-color:var(--crimson-br);box-shadow:0 0 0 3px var(--glow)}
+.lvl-meta{font-family:var(--mono);font-size:11.5px;color:var(--ash);line-height:1.4}
+.lvl-meta b{color:var(--bone)}
+.seg{display:inline-flex;background:var(--black);border:1px solid var(--line2);border-radius:5px;padding:3px}
+.seg button{font-size:13px;font-weight:600;color:var(--ash);background:none;border:0;padding:7px 14px;border-radius:3px;cursor:pointer;transition:.12s}
+.seg button[aria-pressed="true"]{background:var(--crimson);color:#fff}
+.seg button:hover:not([aria-pressed="true"]){color:var(--bone)}
+.hint{font-size:11.5px;color:var(--faint);margin-top:8px;max-width:32ch;line-height:1.4}
+
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+details.panel{overflow:hidden}
+details.panel>summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;user-select:none}
+details.panel>summary::-webkit-details-marker{display:none}
+summary .lbl{font-family:var(--body);font-weight:700;font-size:16px;letter-spacing:.02em;color:var(--bone)}
+.count{font-family:var(--mono);font-size:11px;color:var(--rose);background:var(--glow);border:1px solid var(--line3);padding:1px 8px;border-radius:3px}
+.chev{width:8px;height:8px;border-right:2px solid var(--ash);border-bottom:2px solid var(--ash);transform:rotate(-45deg);transition:.2s;margin-left:auto}
+details[open] .chev{transform:rotate(45deg)}
+.pbody{padding:6px 18px 18px;border-top:1px solid var(--line2)}
+.searchline{position:relative;margin:12px 0 6px}
+.searchline input{width:100%;font-family:var(--mono);font-size:12.5px;color:var(--bone);background:var(--black);border:1px solid var(--line2);border-radius:5px;padding:9px 12px 9px 32px}
+.searchline input:focus{outline:none;border-color:var(--crimson-br)}
+.searchline::before{content:"";position:absolute;left:12px;top:50%;width:10px;height:10px;margin-top:-7px;border:1.5px solid var(--faint);border-radius:50%}
+.searchline::after{content:"";position:absolute;left:20px;top:50%;width:5px;height:1.5px;margin-top:2px;background:var(--faint);transform:rotate(45deg)}
+.quickrow{display:flex;gap:8px;margin:10px 0 4px}
+.mini{font-size:11.5px;font-weight:600;color:var(--ash);background:var(--bg3);border:1px solid var(--line2);border-radius:4px;padding:6px 12px;cursor:pointer;transition:.12s}
+.mini:hover{color:var(--bone);border-color:var(--crimson)}
+.grp{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:14px 0 8px;font-weight:700}
+.checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 14px;max-height:260px;overflow:auto}
+.checks::-webkit-scrollbar{width:8px}.checks::-webkit-scrollbar-thumb{background:var(--line3);border-radius:4px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ash);cursor:pointer;padding:2px 0}
+.chk input{accent-color:var(--crimson-br);width:14px;height:14px;cursor:pointer;flex:none}
+.chk:hover{color:var(--bone)} .chk.on{color:var(--bone)}
+.chk .lv{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-left:auto}
+
+.tools-row{display:flex;gap:10px;align-items:center}
+.search-main{position:relative}
+.search-main input{font-family:var(--mono);font-size:13px;background:var(--bg2);border:1px solid var(--line2);border-radius:5px;padding:9px 12px 9px 32px;color:var(--bone);width:210px}
+.search-main input:focus{outline:none;border-color:var(--crimson-br)}
+.search-main::before{content:"";position:absolute;left:12px;top:50%;width:10px;height:10px;margin-top:-7px;border:1.5px solid var(--faint);border-radius:50%}
+.tablewrap{border:1px solid var(--line2);border-radius:5px;overflow:hidden;background:var(--bg2)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line2);background:var(--bg3);cursor:pointer;user-select:none;white-space:nowrap}
+thead th.sorted{color:var(--rose)}
+thead th.num,td.num{text-align:right;font-family:var(--mono)}
+thead th.act,td.act{text-align:center;cursor:default}
+tbody tr{border-bottom:1px solid var(--line)}
+tbody tr:last-child{border-bottom:0}
+tbody tr:hover{background:var(--bg3)}
+tbody tr.top{box-shadow:inset 3px 0 0 var(--crimson-br)}
+td{padding:10px 14px;vertical-align:middle}
+td.name{font-weight:600;color:var(--bone)}
+td .cat{font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:2px}
+.bptag{font-family:var(--mono);font-size:9px;color:var(--rose);border:1px solid var(--line3);border-radius:2px;padding:1px 5px;margin-left:7px;vertical-align:middle}
+td.eff{font-weight:700;color:var(--rose)}
+td.num{color:var(--ink)}
+.mats-cell{color:var(--ash);font-family:var(--mono);font-size:11px;line-height:1.5;max-width:320px}
+.mats-cell b{color:var(--bone);font-weight:500}
+.rowmeta{font-family:var(--mono);font-size:11px;color:var(--ash)}
+.rowbtn{font-family:var(--mono);font-size:11px;font-weight:700;border-radius:4px;padding:5px 9px;cursor:pointer;border:1px solid var(--line3);background:var(--bg3);color:var(--ash);transition:.12s;white-space:nowrap}
+.rowbtn.q:hover{color:#fff;background:var(--crimson);border-color:var(--crimson)}
+.rowbtn.h{padding:5px 8px}
+.rowbtn.h:hover{color:var(--rose);border-color:var(--crimson)}
+.norows{padding:38px;text-align:center;color:var(--ash);font-family:var(--mono);font-size:14px}
+.recipe-results{max-height:520px;overflow:auto}
+.recipe-results::-webkit-scrollbar{width:8px}.recipe-results::-webkit-scrollbar-thumb{background:var(--line3);border-radius:4px}
+.recipe-empty{padding:30px 18px;text-align:center;color:var(--faint);font-family:var(--mono);font-size:13px;line-height:1.6}
+.rcard{padding:14px 18px;border-top:1px solid var(--line2);display:grid;grid-template-columns:1fr auto;gap:10px 16px;align-items:start}
+.rcard:first-child{border-top:0}
+.rcard .rhead{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;grid-column:1/-1}
+.rcard .rname{font-weight:700;font-size:15.5px;color:var(--bone)}
+.rcard .rcat{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.rcard .rmeta2{font-family:var(--mono);font-size:11.5px;color:var(--ash);grid-column:1/-1;display:flex;gap:16px;flex-wrap:wrap}
+.rcard .rmeta2 b{color:var(--rose)}
+.rcard .rrecipes{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px}
+@media(max-width:640px){.rcard .rrecipes{grid-template-columns:1fr}}
+.rcard .rblock .rlbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.rcard .rblock .rline{font-family:var(--mono);font-size:12.5px;color:var(--ash);line-height:1.6}
+.rcard .rblock .rline b{color:var(--bone);font-weight:500}
+.rcard .ract{grid-column:1/-1;display:flex;gap:8px;margin-top:2px}
+.hiddenbar{margin-top:10px;font-size:12.5px;color:var(--ash);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hchip{font-family:var(--mono);font-size:11px;color:var(--ash);background:var(--bg2);border:1px solid var(--line2);border-radius:4px;padding:4px 8px;cursor:pointer}
+.hchip:hover{color:var(--bone);border-color:var(--crimson)}
+.hchip b{color:var(--rose)}
+
+.queue-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+@media(max-width:860px){.queue-grid{grid-template-columns:1fr}}
+.qlist{padding:6px 0}
+.qrow{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:0}
+.qrow .qn{flex:1;min-width:0}
+.qrow .qn .qnm{font-weight:600;color:var(--bone)}
+.qrow .qn .qmeta{font-family:var(--mono);font-size:11px;color:var(--ash);margin-top:2px}
+.stepper{display:flex;align-items:center;border:1px solid var(--line3);border-radius:5px;overflow:hidden;flex:none}
+.stepper button{width:30px;height:32px;background:var(--bg3);border:0;color:var(--bone);font-size:17px;cursor:pointer;line-height:1}
+.stepper button:hover{background:var(--crimson);color:#fff}
+.stepper input{width:48px;height:32px;text-align:center;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--rose);background:var(--black);border:0;border-left:1px solid var(--line2);border-right:1px solid var(--line2)}
+.stepper input:focus{outline:none}
+.qdel{background:none;border:0;color:var(--faint);cursor:pointer;font-size:16px;padding:4px;flex:none}
+.qdel:hover{color:var(--crimson-br)}
+.qempty{padding:30px 18px;text-align:center;color:var(--faint);font-family:var(--mono);font-size:13px;line-height:1.6}
+.qadd{padding:14px 18px;border-top:1px solid var(--line2);position:relative}
+.qadd input{width:100%;font-family:var(--mono);font-size:12.5px;background:var(--black);border:1px solid var(--line2);border-radius:5px;padding:9px 12px;color:var(--bone)}
+.qadd input:focus{outline:none;border-color:var(--crimson-br)}
+.qsug{position:absolute;left:18px;right:18px;top:56px;background:var(--bg3);border:1px solid var(--line3);border-radius:5px;z-index:20;max-height:240px;overflow:auto;box-shadow:0 12px 30px -8px #000}
+.qsug div{padding:9px 12px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line)}
+.qsug div:last-child{border-bottom:0}
+.qsug div:hover{background:var(--crimson);color:#fff}
+.qsug .s{font-family:var(--mono);font-size:11px;color:var(--ash)}
+.qsug div:hover .s{color:#fff}
+
+.costcard{padding:0;align-self:start}
+.costhead{display:flex;justify-content:space-between;align-items:baseline;padding:16px 18px;border-bottom:1px solid var(--line2)}
+.costhead .ttl{font-family:var(--body);font-weight:700;font-size:17px;color:var(--bone)}
+.tot{display:flex;gap:20px;padding:15px 18px;border-bottom:1px solid var(--line2);font-family:var(--mono);flex-wrap:wrap}
+.tot .k{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.tot .v{font-size:21px;font-weight:700;color:var(--bone);margin-top:2px}
+.tot .v.rose{color:var(--rose)}
+.reclist{font-family:var(--mono);font-size:13px}
+.recrow{display:flex;justify-content:space-between;padding:9px 18px;border-bottom:1px solid var(--line)}
+.recrow:last-child{border-bottom:0}
+.recrow .m{color:var(--bone);text-transform:capitalize}
+.recrow .a{color:var(--rose);font-weight:700}
+details.other{border-top:1px solid var(--line2)}
+details.other>summary{list-style:none;cursor:pointer;padding:12px 18px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ash);user-select:none}
+details.other>summary::-webkit-details-marker{display:none}
+details.other .chev2{width:7px;height:7px;border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);transform:rotate(-45deg);transition:.2s;margin-left:auto}
+details.other[open] .chev2{transform:rotate(45deg)}
+details.other .cnt{color:var(--rose);font-weight:700}
+.otherbody .recrow .a{color:var(--ash)}
+.otherbody .recrow .m{color:var(--ink)}
+.costfoot{padding:14px 18px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line2)}
+.btn{font-family:var(--body);font-weight:600;font-size:12.5px;border-radius:5px;padding:8px 14px;cursor:pointer;transition:.12s;border:1px solid var(--line3);background:var(--bg3);color:var(--ash)}
+.btn:hover{color:var(--bone);border-color:var(--crimson)}
+.btn.solid{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.btn.solid:hover{background:var(--crimson-br)}
+
+.ladder{position:relative;padding-left:4px;margin-top:6px}
+.ladder::before{content:"";position:absolute;left:70px;top:8px;bottom:8px;width:2px;background:var(--crimson)}
+.rung{position:relative;display:grid;grid-template-columns:64px 1fr;gap:22px;padding:8px 0;align-items:start}
+.rung .lv{font-family:var(--mono);font-size:12px;color:var(--ash);text-align:right;padding-top:4px;white-space:nowrap}
+.rung .lv b{color:var(--rose);font-size:15px;font-weight:700}
+.rung::after{content:"";position:absolute;left:66px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--crimson-br);box-shadow:0 0 0 4px var(--black)}
+.rung .rc{background:var(--bg2);border:1px solid var(--line2);border-radius:5px;padding:11px 15px;transition:.12s}
+.rung .rc:hover{border-color:var(--line3)}
+.rung .rn{font-weight:600;font-size:14.5px;color:var(--bone)}
+.rung .rmeta{font-family:var(--mono);font-size:11.5px;color:var(--ash);margin-top:3px}
+.rung .rmeta .e{color:var(--rose);font-weight:700}
+.rung .rmeta .sep{color:var(--faint);margin:0 8px}
+.rung.gap .rc{background:transparent;border-style:dashed;color:var(--faint)}
+
+footer{margin:56px 0 44px;padding-top:22px;border-top:1px solid var(--line2);color:var(--faint);font-size:12px;font-family:var(--mono);line-height:1.7}
+footer b{color:var(--ash)}
+
+@media(max-width:720px){
+  .controls{grid-template-columns:1fr}
+  .filters{grid-template-columns:1fr}
+  thead th.hide-sm,td.hide-sm{display:none}
+  .mats-cell{max-width:none}
+  .ladder::before{left:46px}.rung{grid-template-columns:40px 1fr;gap:14px}.rung::after{left:42px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="emblem" id="emblem" alt="Shadow emblem" src="shadow.png">
+    <div class="titleblock">
+      <div class="wordmark" id="wordmark"><span class="x">S</span>HADOW</div>
+      <div class="tagline" id="tagline">Crafting Ledger <span class="dot">✕</span> XP &amp; Material Optimizer</div>
+    </div>
+  </header>
+
+  <div class="card controls">
+    <div class="ctrl">
+      <label for="lvl">Your level</label>
+      <div class="lvl-box"><input id="lvl" type="number" min="0" max="200" value="1" inputmode="numeric">
+        <div class="lvl-meta" id="lvlMeta"></div></div>
+    </div>
+    <div class="ctrl">
+      <label>Cost basis</label>
+      <div class="seg" id="modeSeg" role="group">
+        <button data-mode="raw" aria-pressed="true">Raw</button>
+        <button data-mode="direct" aria-pressed="false">As listed</button>
+      </div>
+      <div class="hint" id="modeHint">Raw breaks crafted parts down to base recyclables.</div>
+    </div>
+    <div class="ctrl">
+      <label>Show</label>
+      <div class="seg" id="scopeSeg" role="group">
+        <button data-scope="craftable" aria-pressed="true">Pays XP now</button>
+        <button data-scope="all" aria-pressed="false">All unlocked</button>
+      </div>
+      <div class="hint">Hides crafts already past their stop-XP for your level.</div>
+    </div>
+    <div class="ctrl">
+      <label>Knowledge Seeker</label>
+      <div class="seg" id="ksSeg" role="group">
+        <button data-ks="0" aria-pressed="false">Off</button>
+        <button data-ks="1" aria-pressed="false">+1</button>
+        <button data-ks="2" aria-pressed="false">+2</button>
+        <button data-ks="3" aria-pressed="true">+3</button>
+      </div>
+      <div class="hint">Bonus XP added to every single craft.</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <details class="card panel" id="bpPanel">
+      <summary><span class="lbl">Blueprints owned</span><span class="count" id="bpCount">–</span><span class="chev"></span></summary>
+      <div class="pbody">
+        <div class="searchline"><input id="bpSearch" placeholder="search blueprints…" autocomplete="off"></div>
+        <div class="quickrow"><button class="mini" data-bp="all">Own all</button><button class="mini" data-bp="none">Own none</button></div>
+        <div id="bpChecks"></div>
+      </div>
+    </details>
+    <details class="card panel" id="matPanel">
+      <summary><span class="lbl">Materials available</span><span class="count" id="matCount">–</span><span class="chev"></span></summary>
+      <div class="pbody">
+        <div class="searchline"><input id="matSearch" placeholder="search materials…" autocomplete="off"></div>
+        <div class="quickrow"><button class="mini" data-mat="all">All</button><button class="mini" data-mat="base8">Base 8 only</button></div>
+        <div id="matChecks"></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="sechead"><span class="crumb">Codex</span><h2>Recipe lookup</h2>
+    <span class="desc">Search any item — locked, un-owned, or filtered out — for its full recipe.</span></div>
+  <div class="card">
+    <div class="pbody" style="padding-top:14px">
+      <div class="searchline"><input id="recipeSearch" placeholder="search all items by name…" autocomplete="off"></div>
+    </div>
+    <div id="recipeResults" class="recipe-results"></div>
+  </div>
+
+  <div class="sechead"><span class="crumb">Rank</span><h2>Best crafts at level <span id="lvlEcho">1</span></h2>
+    <span class="desc">By XP per material.</span><span class="spacer"></span>
+    <div class="tools-row"><div class="search-main"><input id="search" placeholder="filter by name…" autocomplete="off"></div></div>
+  </div>
+  <div class="tablewrap">
+    <table id="tbl"><thead><tr>
+      <th data-sort="eff" class="sorted num">XP / mat</th>
+      <th data-sort="name">Item</th>
+      <th data-sort="xp" class="num">XP</th>
+      <th data-sort="cost" class="num">Mats</th>
+      <th data-sort="req" class="num hide-sm">Unlock</th>
+      <th data-sort="stop" class="num hide-sm">Stops</th>
+      <th class="hide-sm">Recipe</th>
+      <th class="act">Add</th>
+      <th class="act">Hide</th>
+    </tr></thead><tbody id="tblBody"></tbody></table>
+  </div>
+  <div class="hiddenbar" id="hiddenBar"></div>
+
+  <div class="sechead"><span class="crumb">Build</span><h2>Crafting queue</h2>
+    <span class="desc">Set amounts; totals roll up into recyclables.</span></div>
+  <div class="queue-grid">
+    <div class="card">
+      <div class="qlist" id="qList"></div>
+      <div class="qadd"><input id="qAdd" placeholder="+ add a craft to the queue…" autocomplete="off">
+        <div class="qsug" id="qSug" style="display:none"></div></div>
+    </div>
+    <div class="card costcard" id="costCard"></div>
+  </div>
+
+  <div class="sechead"><span class="crumb">Path</span><h2>Optimal path across all levels</h2>
+    <span class="desc">Best craft for each stretch, given your filters.</span></div>
+  <div class="ladder" id="ladder"></div>
+
+  <div class="sechead"><span class="crumb">Plan</span><h2>Level-up cost</h2>
+    <span class="desc">Total recyclables to climb a range on the optimal path.</span></div>
+  <div class="card">
+    <div class="planner-controls">
+      <div><label style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;font-weight:700">From level</label>
+        <input class="plan-in" id="planFrom" type="number" min="0" max="200" value="8"></div>
+      <span class="plan-arrow">→</span>
+      <div><label style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;font-weight:700">To level</label>
+        <input class="plan-in" id="planTo" type="number" min="0" max="200" value="60"></div>
+      <div class="plan-note">Uses your current filters, Knowledge Seeker, and the optimal craft at each stage.</div>
+    </div>
+    <div class="plan-body" id="planBody"></div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="config.js"></script>
+<script>
+const LVL_XP=100;
+const BASE8=["aluminium","rubber","steel","plastic","wire","electronics","scrap","glass"];
+const BASE8SET=new Set(BASE8);
+const CATLABEL={attachments:"Attachment",weapons:"Weapon",tools:"Tool",materials:"Material",skins:"Skin"};
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9]/g,"");
+const pretty=k=>k.replace(/([a-z])([A-Z])/g,"$1 $2").replace(/^./,c=>c.toUpperCase());
+
+const ITEMS=CONFIG_ITEMS.map(it=>({name:it.name,cat:(it.category||"").toLowerCase(),
+  req:+it.levelRequired||0,xp:+it.xp||0,stop:+it.stopLevel||0,bp:!!it.blueprintRequired,
+  yields:+it.yields||1,mats:it.materials||{}}));
+const MADE={};ITEMS.forEach(it=>MADE[norm(it.name)]=it);
+const producer=k=>MADE[norm(k)]||null;
+const rawCache={};
+function rawExpand(it,seen){seen=seen||new Set();if(rawCache[it.name])return rawCache[it.name];
+  if(seen.has(it.name))return{};seen.add(it.name);const out={};
+  for(const[k,q]of Object.entries(it.mats)){const p=producer(k);
+    if(p&&p!==it){const sub=rawExpand(p,seen),per=p.yields||1;
+      for(const[rk,rq]of Object.entries(sub))out[rk]=(out[rk]||0)+rq*q/per;}
+    else out[k]=(out[k]||0)+q;}
+  seen.delete(it.name);rawCache[it.name]=out;return out;}
+ITEMS.forEach(it=>{it.directTotal=Object.values(it.mats).reduce((a,b)=>a+b,0);
+  it.raw=rawExpand(it);it.rawTotal=Object.values(it.raw).reduce((a,b)=>a+b,0);it.rawLeaves=Object.keys(it.raw);});
+const ALL_LEAVES=[...new Set(ITEMS.flatMap(i=>i.rawLeaves))].sort();
+const byName=n=>ITEMS.find(i=>i.name===n);
+
+/* persistence (v2 namespace so new defaults apply cleanly) */
+const store={get(k,d){try{const v=localStorage.getItem("cr2_"+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem("cr2_"+k,JSON.stringify(v));}catch(e){}}};
+
+/* state — NEW DEFAULTS: level 1, no blueprints, base-8 materials only */
+const state={
+  level:store.get("level",1),mode:store.get("mode","raw"),scope:"craftable",search:"",
+  sort:{key:"eff",dir:-1},
+  ks:store.get("ks",3),
+  planFrom:store.get("planFrom",8),planTo:store.get("planTo",60),
+  ownedBP:new Set(store.get("bp",[])),
+  allowMat:new Set(store.get("mat",BASE8.filter(m=>ALL_LEAVES.includes(m)))),
+  queue:store.get("queue",[]),
+  hidden:new Set(store.get("hidden",[])),
+  bpQ:"",matQ:"",recipeQ:""
+};
+function persist(){store.set("level",state.level);store.set("mode",state.mode);store.set("ks",state.ks);
+  store.set("planFrom",state.planFrom);store.set("planTo",state.planTo);
+  store.set("bp",[...state.ownedBP]);store.set("mat",[...state.allowMat]);
+  store.set("queue",state.queue);store.set("hidden",[...state.hidden]);}
+
+const $=s=>document.querySelector(s);
+
+/* brand text from style_config.js — colors were already applied in <head> */
+const BRAND=Object.assign({gangName:"SHADOW",gangNameHighlightChars:1,tagline:"Crafting Ledger",
+  taglineAccent:"XP & Material Optimizer",pageTitleSuffix:"Crafting Ledger",emblemSrc:"shadow.png",emblemAlt:"Gang emblem"},
+  (typeof STYLE_CONFIG!=='undefined')?STYLE_CONFIG:{});
+function applyBranding(){
+  const n=BRAND.gangName,hl=Math.max(0,Math.min(n.length,+BRAND.gangNameHighlightChars||0));
+  $("#wordmark").innerHTML=`<span class="x">${n.slice(0,hl)}</span>${n.slice(hl)}`;
+  $("#tagline").innerHTML=`${BRAND.tagline} <span class="dot">✕</span> ${BRAND.taglineAccent}`;
+  const em=$("#emblem");em.src=BRAND.emblemSrc;em.alt=BRAND.emblemAlt;
+  document.title=`${n} · ${BRAND.pageTitleSuffix}`;
+}
+applyBranding();
+const effXP=it=>it.xp+state.ks;                       // Knowledge Seeker bonus per craft
+const recCost=it=>BASE8.reduce((s,m)=>s+(it.raw[m]||0),0);  // base-8 recyclable subtotal
+const cost=it=>state.mode==="raw"?it.rawTotal:it.directTotal;
+const eff=it=>{const c=cost(it);return c>0?effXP(it)/c:0;};
+const paysXP=(it,L)=>L*LVL_XP<it.stop;
+const bpOK=it=>!it.bp||state.ownedBP.has(it.name);
+const matOK=it=>it.rawLeaves.every(m=>state.allowMat.has(m));
+function usable(it,L,pay){return it.req<=L&&bpOK(it)&&matOK(it)&&cost(it)>0&&it.xp>0
+  &&!state.hidden.has(it.name)&&(!pay||paysXP(it,L));}
+function recipeHTML(it){const src=state.mode==="raw"?it.raw:it.mats;
+  return Object.entries(src).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${Math.round(v)}&nbsp;<b>${pretty(k)}</b>`).join(", ");}
+function bestAt(L){const pool=ITEMS.filter(it=>usable(it,L,true));return pool.length?pool.reduce((a,b)=>eff(b)>eff(a)?b:a):null;}
+
+function renderTable(){
+  const L=state.level,pay=state.scope==="craftable";
+  let rows=ITEMS.filter(it=>usable(it,L,pay));
+  if(state.search){const q=state.search.toLowerCase();rows=rows.filter(it=>it.name.toLowerCase().includes(q));}
+  const k=state.sort.key,dir=state.sort.dir;
+  const val={eff:eff,name:it=>it.name.toLowerCase(),xp:it=>it.xp,cost:cost,req:it=>it.req,stop:it=>it.stop}[k];
+  rows.sort((a,b)=>{const va=val(a),vb=val(b);if(va<vb)return -dir;if(va>vb)return dir;return eff(b)-eff(a);});
+  const body=$("#tblBody");
+  if(!rows.length)body.innerHTML=`<tr><td colspan="9" class="norows">Nothing matches. Loosen your blueprint or material filters, or unhide crafts.</td></tr>`;
+  else body.innerHTML=rows.map((it,i)=>`
+    <tr class="${i===0&&k==='eff'&&dir===-1?'top':''}">
+      <td class="num eff">${eff(it).toFixed(4)}</td>
+      <td class="name">${it.name}<span class="cat">${CATLABEL[it.cat]||it.cat}</span>${it.bp?'<span class="bptag">BP</span>':''}</td>
+      <td class="num">${effXP(it)}${state.ks?`<span style="color:var(--faint)"> · ${it.xp}+${state.ks}</span>`:''}</td><td class="num">${Math.round(cost(it))}</td>
+      <td class="num hide-sm rowmeta">Lv ${it.req}</td>
+      <td class="num hide-sm rowmeta">${it.stop>=20000?'—':'Lv '+(it.stop/LVL_XP)}</td>
+      <td class="hide-sm mats-cell">${recipeHTML(it)}</td>
+      <td class="act"><button class="rowbtn q" data-add="${encodeURIComponent(it.name)}">+ Queue</button></td>
+      <td class="act"><button class="rowbtn h" data-hide="${encodeURIComponent(it.name)}" title="Hide this craft">✕</button></td>
+    </tr>`).join("");
+  document.querySelectorAll("thead th").forEach(th=>th.classList.toggle("sorted",th.dataset.sort===k));
+  renderHiddenBar();
+}
+function renderHiddenBar(){
+  const bar=$("#hiddenBar");
+  if(!state.hidden.size){bar.innerHTML="";return;}
+  bar.innerHTML=`<span>Hidden (${state.hidden.size}):</span>`+
+    [...state.hidden].map(n=>`<button class="hchip" data-unhide="${encodeURIComponent(n)}">${n} <b>✕</b></button>`).join("")+
+    `<button class="hchip" data-unhide="__ALL__">clear all</button>`;
+}
+
+/* queue */
+function queueRaw(){const need={};let totXP=0,totOut=0;
+  for(const q of state.queue){const it=byName(q.name);if(!it)continue;const n=Math.max(0,q.qty|0);
+    for(const[k,v]of Object.entries(it.raw))need[k]=(need[k]||0)+v*n;
+    totXP+=effXP(it)*n;totOut+=(it.yields||1)*n;}
+  return{need,totXP,totOut};}
+function addToQueue(name){const ex=state.queue.find(q=>q.name===name);
+  if(ex)ex.qty++;else state.queue.push({name,qty:1});persist();renderQueue();}
+function renderQueue(){
+  const list=$("#qList");
+  if(!state.queue.length)list.innerHTML=`<div class="qempty">No crafts queued.<br>Add from the table above or search below.</div>`;
+  else list.innerHTML=state.queue.map((q,idx)=>{const it=byName(q.name);if(!it)return"";
+    return `<div class="qrow"><div class="qn"><div class="qnm">${it.name}${it.bp?'<span class="bptag">BP</span>':''}</div>
+      <div class="qmeta">${effXP(it)} xp · ${Math.round(it.rawTotal)} raw mats each${it.yields>1?` · yields ${it.yields}`:''}</div></div>
+      <div class="stepper"><button data-step="${idx}:-1">–</button>
+        <input type="number" min="0" data-qty="${idx}" value="${q.qty}"><button data-step="${idx}:1">+</button></div>
+      <button class="qdel" data-qdel="${idx}" title="Remove">🗑</button></div>`;}).join("");
+  renderCost();
+}
+function renderCost(){
+  const {need,totXP,totOut}=queueRaw();
+  const base=BASE8.filter(m=>need[m]>0).sort((a,b)=>need[b]-need[a]);
+  const other=Object.keys(need).filter(m=>!BASE8SET.has(m)&&need[m]>0).sort((a,b)=>need[b]-need[a]);
+  const totRec=base.reduce((s,m)=>s+need[m],0);
+  const c=$("#costCard");
+  if(!base.length&&!other.length){c.innerHTML=`<div class="costhead"><span class="ttl">Materials needed</span></div>
+    <div class="qempty">Queue is empty.</div>`;return;}
+  const baseRows=base.map(m=>`<div class="recrow"><span class="m">${pretty(m)}</span><span class="a">${Math.round(need[m]).toLocaleString()}</span></div>`).join("")
+    ||`<div class="recrow"><span class="m" style="color:var(--faint)">No base recyclables needed</span></div>`;
+  const otherBlock=other.length?`<details class="other"><summary>Other materials <span class="cnt">${other.length}</span><span class="chev2"></span></summary>
+    <div class="otherbody">${other.map(m=>`<div class="recrow"><span class="m">${pretty(m)}</span><span class="a">${Math.round(need[m]).toLocaleString()}</span></div>`).join("")}</div></details>`:"";
+  c.innerHTML=`<div class="costhead"><span class="ttl">Materials needed</span></div>
+    <div class="tot">
+      <div><div class="k">Total recyclables</div><div class="v rose">${Math.round(totRec).toLocaleString()}</div></div>
+      <div><div class="k">Total XP</div><div class="v">${totXP.toLocaleString()}</div></div>
+      <div><div class="k">Items out</div><div class="v">${totOut.toLocaleString()}</div></div>
+    </div>
+    <div class="reclist">${baseRows}</div>
+    ${otherBlock}
+    <div class="costfoot">
+      <button class="btn solid" id="copyRec">Copy recyclables</button>
+      ${other.length?'<button class="btn" id="copyOther">Copy other</button>':''}
+      <button class="btn" id="qClear">Clear queue</button></div>`;
+  $("#copyRec").onclick=()=>copyList(need,BASE8.filter(m=>need[m]>0),"recyclables","copyRec");
+  if(other.length)$("#copyOther").onclick=()=>copyList(need,other,"other materials","copyOther");
+  $("#qClear").onclick=()=>{state.queue=[];persist();renderQueue();};
+}
+function copyList(need,keys,label,btnId){
+  const txt=`${BRAND.gangName} — ${label}:\n`+keys.map(k=>`${Math.round(need[k])} ${pretty(k)}`).join("\n");
+  navigator.clipboard?.writeText(txt).then(()=>{},()=>{});
+  const btn=document.getElementById(btnId);if(btn){const t=btn.textContent;btn.textContent="Copied ✓";setTimeout(()=>btn.textContent=t,1200);}
+}
+
+/* ladder */
+function renderLadder(){
+  const maxLevel=Math.min(200,Math.ceil(Math.max(...ITEMS.map(i=>i.stop))/LVL_XP));
+  const seq=[];for(let L=0;L<=maxLevel;L++){const b=bestAt(L);seq.push({L,name:b?b.name:null,it:b,e:b?eff(b):0});}
+  const segs=[];let cur=null;
+  for(const s of seq){if(cur&&cur.name===s.name)cur.to=s.L;else{cur={name:s.name,it:s.it,e:s.e,from:s.L,to:s.L};segs.push(cur);}}
+  $("#ladder").innerHTML=segs.map(sg=>{
+    if(!sg.name)return `<div class="rung gap"><div class="lv">${sg.from}${sg.to>sg.from?'–'+sg.to:''}</div><div class="rc">No XP-paying craft under current filters</div></div>`;
+    const it=sg.it;
+    return `<div class="rung"><div class="lv">${sg.from===sg.to?`<b>${sg.from}</b>`:`<b>${sg.from}</b>–${sg.to}`}</div>
+      <div class="rc"><div class="rn">${it.name}${it.bp?'<span class="bptag">BP</span>':''}</div>
+        <div class="rmeta"><span class="e">${sg.e.toFixed(4)}</span> xp/mat<span class="sep">·</span>${effXP(it)} xp / ${Math.round(cost(it))} mats<span class="sep">·</span>${CATLABEL[it.cat]||it.cat}</div>
+      </div></div>`;}).join("");
+}
+
+/* level-up planner: walk optimal path, segment by level + stop-XP boundaries */
+function planLevelUp(fromLv,toLv){
+  const fromXP=fromLv*LVL_XP, toXP=toLv*LVL_XP;
+  if(toXP<=fromXP)return null;
+  const bset=new Set([fromXP,toXP]);
+  for(let L=fromLv;L<=toLv;L++)bset.add(L*LVL_XP);
+  ITEMS.forEach(it=>{if(it.stop>fromXP&&it.stop<toXP)bset.add(it.stop);});
+  const bounds=[...bset].filter(x=>x>=fromXP&&x<=toXP).sort((a,b)=>a-b);
+  const need={};let totRec=0,totCrafts=0,coveredXP=0;const stages=[];const gaps=[];
+  const bestForSeg=a=>{const L=Math.floor(a/LVL_XP);
+    const pool=ITEMS.filter(it=>it.req<=L&&it.stop>a&&bpOK(it)&&matOK(it)&&!state.hidden.has(it.name)&&cost(it)>0&&effXP(it)>0);
+    return pool.length?pool.reduce((x,y)=>eff(y)>eff(x)?y:x):null;};
+  for(let i=0;i<bounds.length-1;i++){
+    const a=bounds[i],b=bounds[i+1],segXP=b-a;if(segXP<=0)continue;
+    const it=bestForSeg(a);
+    if(!it){gaps.push([Math.floor(a/LVL_XP),Math.floor(b/LVL_XP)]);continue;}
+    const crafts=segXP/effXP(it);
+    totCrafts+=crafts;totRec+=crafts*recCost(it);coveredXP+=segXP;
+    for(const[k,v]of Object.entries(it.raw))need[k]=(need[k]||0)+v*crafts;
+    const last=stages[stages.length-1];
+    if(last&&last.name===it.name){last.toXP=b;last.crafts+=crafts;}
+    else stages.push({name:it.name,it,fromXP:a,toXP:b,crafts});
+  }
+  return{need,totRec,totCrafts,coveredXP,stages,gaps,fromXP,toXP};}
+function renderPlanner(){
+  const from=state.planFrom,to=state.planTo;const r=planLevelUp(from,to);const el=$("#planBody");
+  if(!r){el.innerHTML=`<div class="plan-warn">Set “to” higher than “from”.</div>`;return;}
+  const base=BASE8.filter(m=>r.need[m]>0).sort((a,b)=>r.need[b]-r.need[a]);
+  const other=Object.keys(r.need).filter(m=>!BASE8SET.has(m)&&r.need[m]>0).sort((a,b)=>r.need[b]-r.need[a]);
+  const baseRows=base.map(m=>`<div class="recrow"><span class="m">${pretty(m)}</span><span class="a">${Math.round(r.need[m]).toLocaleString()}</span></div>`).join("")||`<div class="recrow"><span class="m" style="color:var(--faint)">none</span></div>`;
+  const otherBlock=other.length?`<details class="other"><summary>Other materials <span class="cnt">${other.length}</span><span class="chev2"></span></summary>
+    <div class="otherbody">${other.map(m=>`<div class="recrow"><span class="m">${pretty(m)}</span><span class="a">${Math.round(r.need[m]).toLocaleString()}</span></div>`).join("")}</div></details>`:"";
+  const gapWarn=r.gaps.length?`<div class="plan-warn">No craft covers level ${r.gaps.map(g=>g[0]+(g[1]>g[0]+1?'–'+(g[1]-1):'')).join(", ")} under your filters — those levels are excluded from the total. Enable more blueprints or materials to fill them.</div>`:"";
+  const stageRows=r.stages.map(s=>`<div class="stage"><span class="sl">Lv ${Math.floor(s.fromXP/100)}–${Math.floor(s.toXP/100)}</span>
+    <span class="sn">${s.name}${s.it.bp?' <span class="bptag">BP</span>':''}</span>
+    <span class="sc">×${Math.ceil(s.crafts).toLocaleString()} crafts · ${Math.round(s.crafts*recCost(s.it)).toLocaleString()} rec</span></div>`).join("");
+  el.innerHTML=`${gapWarn}
+    <div class="tot">
+      <div><div class="k">Total recyclables</div><div class="v rose">${Math.round(r.totRec).toLocaleString()}</div></div>
+      <div><div class="k">Total crafts</div><div class="v">${Math.ceil(r.totCrafts).toLocaleString()}</div></div>
+      <div><div class="k">XP span</div><div class="v">${r.coveredXP.toLocaleString()}</div></div>
+      <div><div class="k">Knowledge Seeker</div><div class="v">${state.ks?'+'+state.ks:'off'}</div></div>
+    </div>
+    <div class="reclist">${baseRows}</div>
+    ${otherBlock}
+    <div class="stages">${stageRows}</div>
+    <div class="costfoot"><button class="btn solid" id="copyPlan">Copy recyclables</button></div>`;
+  const cp=$("#copyPlan");if(cp)cp.onclick=()=>{const txt=`${BRAND.gangName} — recyclables Lv${from}→${to} (KS ${state.ks?'+'+state.ks:'off'}):\n`+base.map(m=>`${Math.round(r.need[m])} ${pretty(m)}`).join("\n");navigator.clipboard?.writeText(txt).then(()=>{},()=>{});const t=cp.textContent;cp.textContent="Copied ✓";setTimeout(()=>cp.textContent=t,1200);};
+}
+
+/* filter panels */
+function buildBP(){
+  const q=state.bpQ.toLowerCase();
+  const bpItems=ITEMS.filter(i=>i.bp&&(!q||i.name.toLowerCase().includes(q)));
+  const byCat={};bpItems.forEach(i=>(byCat[i.cat]=byCat[i.cat]||[]).push(i));
+  const order=["weapons","attachments","tools","materials","skins"];
+  $("#bpChecks").innerHTML=order.filter(c=>byCat[c]).map(c=>`<div class="grp">${(CATLABEL[c]||c)}s</div>
+    <div class="checks">${byCat[c].sort((a,b)=>a.req-b.req).map(i=>`<label class="chk ${state.ownedBP.has(i.name)?'on':''}">
+      <input type="checkbox" data-bpname="${encodeURIComponent(i.name)}" ${state.ownedBP.has(i.name)?'checked':''}>
+      <span>${i.name}</span><span class="lv">L${i.req}</span></label>`).join("")}</div>`).join("")
+    ||`<div class="grp" style="color:var(--faint)">No blueprints match.</div>`;
+  $("#bpCount").textContent=`${state.ownedBP.size}/${ITEMS.filter(i=>i.bp).length}`;
+}
+function buildMat(){
+  const q=state.matQ.toLowerCase();
+  const list=ALL_LEAVES.filter(m=>!q||pretty(m).toLowerCase().includes(q));
+  $("#matChecks").innerHTML=`<div class="checks">${list.map(m=>`<label class="chk ${state.allowMat.has(m)?'on':''}">
+    <input type="checkbox" data-matname="${m}" ${state.allowMat.has(m)?'checked':''}><span>${pretty(m)}${BASE8SET.has(m)?'':''}</span></label>`).join("")
+    ||`<span class="grp" style="color:var(--faint)">No materials match.</span>`}</div>`;
+  $("#matCount").textContent=`${state.allowMat.size}/${ALL_LEAVES.length}`;
+}
+
+/* recipe lookup — searches every item regardless of level, blueprint, material, or hidden filters */
+function formatMats(obj){
+  const entries=Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length)return `<div class="rline" style="color:var(--faint)">No materials.</div>`;
+  return entries.map(([k,v])=>`<div class="rline">${Math.round(v).toLocaleString()}&nbsp;<b>${pretty(k)}</b></div>`).join("");
+}
+function renderRecipeSearch(){
+  const box=$("#recipeResults");
+  const q=state.recipeQ.trim().toLowerCase();
+  if(!q){box.innerHTML=`<div class="recipe-empty">Start typing to search all ${ITEMS.length} items — including ones locked, missing a blueprint, or hidden from the table above.</div>`;return;}
+  const rows=ITEMS.filter(it=>it.name.toLowerCase().includes(q)).sort((a,b)=>a.req-b.req||a.name.localeCompare(b.name)).slice(0,40);
+  if(!rows.length){box.innerHTML=`<div class="recipe-empty">No item matches "${state.recipeQ}".</div>`;return;}
+  box.innerHTML=rows.map(it=>`
+    <div class="rcard">
+      <div class="rhead">
+        <span class="rname">${it.name}</span>
+        <span class="rcat">${CATLABEL[it.cat]||it.cat}</span>
+        ${it.bp?'<span class="bptag">BP</span>':''}
+      </div>
+      <div class="rmeta2">
+        <span>Unlock <b>Lv ${it.req}</b></span>
+        <span>XP <b>${effXP(it)}</b>${state.ks?` (${it.xp}+${state.ks})`:''}</span>
+        <span>Stops <b>${it.stop>=20000?'—':'Lv '+(it.stop/LVL_XP)}</b></span>
+        ${it.yields>1?`<span>Yields <b>${it.yields}</b></span>`:''}
+      </div>
+      <div class="rrecipes">
+        <div class="rblock"><div class="rlbl">As listed</div>${formatMats(it.mats)}</div>
+        <div class="rblock"><div class="rlbl">Raw recyclables</div>${formatMats(it.raw)}</div>
+      </div>
+      <div class="ract"><button class="btn solid" data-radd="${encodeURIComponent(it.name)}">+ Add to queue</button></div>
+    </div>`).join("");
+}
+
+function renderMeta(){$("#lvlMeta").innerHTML=`= <b>${(state.level*LVL_XP).toLocaleString()}</b> XP<br>each level = 100 XP`;$("#lvlEcho").textContent=state.level;}
+function renderFoot(){$("#foot").innerHTML=`${ITEMS.length} crafts loaded · <b>XP/mat</b> = XP ÷ ${state.mode==="raw"?"raw material":"listed material"} count · stop-XP removes a craft once total XP ≥ its cap · settings saved to this browser. Sub-parts you craft along the way earn their own XP on top.`;}
+
+function refreshDerived(){renderTable();renderLadder();renderPlanner();}
+function renderAll(){renderMeta();renderTable();renderQueue();renderLadder();renderPlanner();renderFoot();buildBP();buildMat();renderRecipeSearch();}
+
+/* events */
+$("#lvl").addEventListener("input",e=>{state.level=Math.max(0,Math.min(200,+e.target.value||0));persist();renderMeta();refreshDerived();});
+$("#modeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.mode=b.dataset.mode;
+  document.querySelectorAll("#modeSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  $("#modeHint").textContent=state.mode==="raw"?"Raw breaks crafted parts down to base recyclables.":"As listed counts each recipe line once.";
+  persist();renderTable();renderLadder();renderFoot();});
+$("#scopeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.scope=b.dataset.scope;
+  document.querySelectorAll("#scopeSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderTable();});
+$("#ksSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.ks=+b.dataset.ks;
+  document.querySelectorAll("#ksSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  persist();renderTable();renderQueue();renderLadder();renderPlanner();renderFoot();});
+$("#planFrom").addEventListener("input",e=>{state.planFrom=Math.max(0,Math.min(200,+e.target.value||0));persist();renderPlanner();});
+$("#planTo").addEventListener("input",e=>{state.planTo=Math.max(0,Math.min(200,+e.target.value||0));persist();renderPlanner();});
+$("#search").addEventListener("input",e=>{state.search=e.target.value;renderTable();});
+$("#recipeSearch").addEventListener("input",e=>{state.recipeQ=e.target.value;renderRecipeSearch();});
+$("#recipeResults").addEventListener("click",e=>{
+  const b=e.target.closest("[data-radd]");if(!b)return;
+  addToQueue(decodeURIComponent(b.dataset.radd));
+  const t=b.textContent;b.textContent="Added ✓";setTimeout(()=>b.textContent=t,900);});
+document.querySelector("thead").addEventListener("click",e=>{const th=e.target.closest("th");if(!th||!th.dataset.sort)return;
+  const k=th.dataset.sort;if(state.sort.key===k)state.sort.dir*=-1;else state.sort={key:k,dir:k==="name"?1:-1};renderTable();});
+
+$("#tblBody").addEventListener("click",e=>{
+  const a=e.target.closest("[data-add]");if(a){addToQueue(decodeURIComponent(a.dataset.add));return;}
+  const h=e.target.closest("[data-hide]");if(h){state.hidden.add(decodeURIComponent(h.dataset.hide));persist();refreshDerived();}});
+$("#hiddenBar").addEventListener("click",e=>{const u=e.target.closest("[data-unhide]");if(!u)return;
+  const n=decodeURIComponent(u.dataset.unhide);if(n==="__ALL__")state.hidden.clear();else state.hidden.delete(n);
+  persist();refreshDerived();});
+
+$("#bpChecks").addEventListener("change",e=>{const cb=e.target;if(!cb.dataset.bpname)return;
+  const n=decodeURIComponent(cb.dataset.bpname);if(cb.checked)state.ownedBP.add(n);else state.ownedBP.delete(n);
+  cb.closest(".chk").classList.toggle("on",cb.checked);$("#bpCount").textContent=`${state.ownedBP.size}/${ITEMS.filter(i=>i.bp).length}`;
+  persist();refreshDerived();});
+$("#bpSearch").addEventListener("input",e=>{state.bpQ=e.target.value;buildBP();});
+document.querySelector('[data-bp="all"]').addEventListener("click",()=>{ITEMS.filter(i=>i.bp).forEach(i=>state.ownedBP.add(i.name));persist();buildBP();refreshDerived();});
+document.querySelector('[data-bp="none"]').addEventListener("click",()=>{state.ownedBP.clear();persist();buildBP();refreshDerived();});
+
+$("#matChecks").addEventListener("change",e=>{const cb=e.target;if(!cb.dataset.matname)return;
+  if(cb.checked)state.allowMat.add(cb.dataset.matname);else state.allowMat.delete(cb.dataset.matname);
+  cb.closest(".chk").classList.toggle("on",cb.checked);$("#matCount").textContent=`${state.allowMat.size}/${ALL_LEAVES.length}`;
+  persist();refreshDerived();});
+$("#matSearch").addEventListener("input",e=>{state.matQ=e.target.value;buildMat();});
+document.querySelector('[data-mat="all"]').addEventListener("click",()=>{ALL_LEAVES.forEach(m=>state.allowMat.add(m));persist();buildMat();refreshDerived();});
+document.querySelector('[data-mat="base8"]').addEventListener("click",()=>{state.allowMat=new Set(BASE8.filter(m=>ALL_LEAVES.includes(m)));persist();buildMat();refreshDerived();});
+
+$("#qList").addEventListener("click",e=>{
+  const s=e.target.closest("[data-step]");if(s){const[i,d]=s.dataset.step.split(":").map(Number);
+    state.queue[i].qty=Math.max(0,state.queue[i].qty+d);if(state.queue[i].qty===0)state.queue.splice(i,1);persist();renderQueue();return;}
+  const del=e.target.closest("[data-qdel]");if(del){state.queue.splice(+del.dataset.qdel,1);persist();renderQueue();}});
+$("#qList").addEventListener("input",e=>{const q=e.target.closest("[data-qty]");if(!q)return;
+  state.queue[+q.dataset.qty].qty=Math.max(0,+q.value||0);persist();renderCost();});
+
+const qAdd=$("#qAdd"),qSug=$("#qSug");
+qAdd.addEventListener("input",()=>{const v=qAdd.value.toLowerCase().trim();
+  if(!v){qSug.style.display="none";return;}
+  const m=ITEMS.filter(it=>cost(it)>0&&it.name.toLowerCase().includes(v)).slice(0,8);
+  if(!m.length){qSug.style.display="none";return;}
+  qSug.innerHTML=m.map(it=>`<div data-qadd="${encodeURIComponent(it.name)}"><span>${it.name}${it.bp?' [BP]':''}</span><span class="s">${it.xp}xp · ${Math.round(it.rawTotal)}mat</span></div>`).join("");
+  qSug.style.display="block";});
+qSug.addEventListener("click",e=>{const d=e.target.closest("[data-qadd]");if(!d)return;
+  addToQueue(decodeURIComponent(d.dataset.qadd));qAdd.value="";qSug.style.display="none";});
+document.addEventListener("click",e=>{if(!e.target.closest(".qadd"))qSug.style.display="none";});
+
+document.querySelectorAll("#modeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===state.mode));
+document.querySelectorAll("#ksSeg button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.ks===state.ks));
+$("#lvl").value=state.level;$("#planFrom").value=state.planFrom;$("#planTo").value=state.planTo;
+$("#modeHint").textContent=state.mode==="raw"?"Raw breaks crafted parts down to base recyclables.":"As listed counts each recipe line once.";
+renderAll();
+</script>
+</body>
+</html>
